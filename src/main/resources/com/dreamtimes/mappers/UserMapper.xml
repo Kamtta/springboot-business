@@ -32,12 +32,12 @@
     -->
     insert into user (id, username, password, 
       email, phone, question, 
-      answer, role, create_time, 
+      answer, create_time,
       update_time)
     values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{question,jdbcType=VARCHAR}, 
-      #{answer,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{answer,jdbcType=VARCHAR}, now(),
+      now())
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.dreamtimes.pojo.User">
     <!--
@@ -74,5 +74,24 @@
     select id, username, password, email, phone, question, answer, role, create_time, 
     update_time
     from user
+  </select>
+
+  <select id="findByUserNameAndPassWord" parameterType="map" resultMap="BaseResultMap">
+    select id, username, password, email, phone, question, answer, role, create_time,
+    update_time
+    from user
+    where username = #{username} and password = #{password}
+  </select>
+
+  <select id="findUserByNameOrByEmail" parameterType="map" resultType="int">
+    select count(*) from user
+    <where>
+      <if test="username!=null">
+        username = #{username}
+      </if>
+      <if test="email!=null">
+        email = #{email}
+      </if>
+    </where>
   </select>
 </mapper>
